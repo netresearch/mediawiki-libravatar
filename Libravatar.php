@@ -7,35 +7,6 @@
  * Provides a <libravatar email="foo@example.org"/> tag for MediaWiki
  * which displays the avatar image for a given email address.
  *
- * Supported attributes:
- * - email     - Email address to show avatar of. Required.
- * - size      - Size in pixels (avatars are quadratic)
- * - default   - Default icon type when no avatar has been found.
- *               Options: 404, mm, identicon, monsterid, wavatar, retro
- * - algorithm - Email hashing algorithm. md5 or sha256
- * - title     - Title attribute value for the image tag
- * - style     - "style" attribute value for the image tag
- *
- * Global configuration variables:
- * - $wgLibravatarSize
- * - $wgLibravatarDefault
- * - $wgLibravatarAlgorithm
- *
- * Requires the Services_Libravatar package from PEAR.
- *
- * Examples:
- * - Simple avatar:
- *   <libravatar email="foo@example.org"/>
- *
- * - Avatar with special size:
- *   <libravatar email="foo@example.org" size="32"/>
- *
- * - Image title:
- *   <libravatar email="foo@example.org" title="Foo's avatar"/>
- *
- * - Verbose notation:
- *   <libravatar default="monsterid">foo@example.org</libravtar>
- *
  * @category MediaWiki
  * @package  Libravatar
  * @author   Christian Weiske <christian.weiske@netresearch.de>
