@@ -71,6 +71,10 @@ Copy the ``mediawiki-libravatar-0.1.0.phar`` file into your MediaWiki
 
 That's it, it works now. All dependencies are included in the ``.phar`` file.
 
+If you get a white page, then you're `probably running Suhosin`__.
+
+__ http://cweiske.de/tagebuch/suhosin-phar.htm
+
 
 Normal installation
 -------------------
