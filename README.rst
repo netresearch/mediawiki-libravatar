@@ -58,6 +58,31 @@ Global configuration variables
 - ``$wgLibravatarAlgorithm``
 
 
+
+Installation
+============
+Phar
+----
+Copy the ``mediawiki-libravatar-0.1.0.phar`` file into your MediaWiki
+``extensions/`` directory and add the following to your
+``LocalSettings.php``::
+
+  require_once "$IP/extensions/mediawiki-libravatar-0.1.0.phar";
+
+That's it, it works now. All dependencies are included in the ``.phar`` file.
+
+
+Normal installation
+-------------------
+
+1. Run $ pear install Services_Libravatar-alpha
+2. Copy this extension's ``Libravatar.php`` to
+   ``$mediawiki/extensions/Libravatar/Libravatar.php``
+3. Edit ``LocalSettings.php``::
+
+    require_once "$IP/extensions/Libravatar/Libravatar.php";
+
+
 Dependencies
 ============
 Requires the `Services_Libravatar`__ package from PEAR.
