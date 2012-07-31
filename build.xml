@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="mediawiki-libravatar" default="phar" basedir=".">
+  <property name="version" value="0.1.0"/>
+  <property name="tmpdir"  value="build"/>
+  <property name="distdir" value="dist"/>
+
+  <typedef name="pearPackageFileSet" classname="phing.types.PearPackageFileSet" />
+
+  <target name="phar" description="Create .phar release">
+    <pearPackageFileSet package="Services_Libravatar" id="sla" />
+
+    <mkdir dir="${tmpdir}"/>
+    <mkdir dir="${distdir}"/>
+
+    <copy todir="${tmpdir}">
+      <fileset refid="sla"/>
+    </copy>
+    <copy file="Libravatar.php" tofile="${tmpdir}/index.php"/>
+
+    <pharpackage destfile="${distdir}/mediawiki-libravatar-${version}.phar"
+                 basedir="${tmpdir}"
+    >
+      <metadata>
+        <element name="version" value="${version}"/>
+        <element name="authors">
+          <element name="Christian Weiske">
+            <element name="e-mail" value="christian.weiske@netresearch.de"/>
+          </element>
+        </element>
+      </metadata>
+      <fileset dir="${tmpdir}">
+        <include name="**/**"/>
+      </fileset>
+    </pharpackage>
+
+    <delete dir="${tmpdir}"/>
+  </target>
+</project>
