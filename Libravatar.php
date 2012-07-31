@@ -69,7 +69,9 @@ function mwLibravatarTagParse($content, $params, $parser)
     $extra = '';
 
     try {
-        if (!isset($params['email']) && $content != '') {
+        if (isset($params['email'])) {
+            //all fine
+        } else if ($content != '') {
             $params['email'] = trim($content);
         } else {
             throw new InvalidArgumentException(
