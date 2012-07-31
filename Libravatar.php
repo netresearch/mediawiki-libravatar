@@ -47,15 +47,17 @@ function mwLibravatarTagInit()
 /**
  * Generates the output for a <libravatar/> tag during parsing.
  *
- * @param string $content Content of the tag (between opening and closing)
- * @param array  $params  Array of tag parameters.
- * @param object $parser  MediaWiki parser object
+ * @param string      $content Content of the tag
+ *                             (between opening and closing tag)
+ * @param array       $params  Array of tag parameters.
+ * @param Parser      $parser  MediaWiki parser object
+ * @param PPFrame_DOM $frame   Context data with e.g. template variables
  *
  * @return string HTML representation of the libravatar tag.
  *
  * @throws MWException In case Services_Libravatar is not available
  */
-function mwLibravatarTagParse($content, $params, $parser)
+function mwLibravatarTagParse($content, $params, $parser, $frame)
 {
     include_once 'Services/Libravatar.php';
     if (!class_exists('Services_Libravatar')) {
@@ -69,6 +71,7 @@ function mwLibravatarTagParse($content, $params, $parser)
     $extra = '';
 
     try {
+        // email attribute
         if (isset($params['email'])) {
             //all fine
         } else if ($content != '') {
@@ -78,25 +81,46 @@ function mwLibravatarTagParse($content, $params, $parser)
                 'email attribute missing'
             );
         }
+        $params['email'] = $parser->recursiveTagParse(
+            $params['email'], $frame
+        );
+
+        // size attribute
         if (isset($params['size'])) {
             $params['size'] = (int) $params['size'];
         } else if (isset($GLOBALS['wgLibravatarSize'])) {
             $params['size'] = (int) $GLOBALS['wgLibravatarSize'];
         }
+        $params['size'] = $parser->recursiveTagParse(
+            $params['size'], $frame
+        );
         $sla->setSize($params['size']);
         $extra .= sprintf(
             ' width="%d" height="%d"', $params['size'], $params['size']
         );
 
+        // default attribute
         if (isset($params['default'])) {
-            $sla->setDefault($params['default']);
+            // ok
         } else if (isset($GLOBALS['wgLibravatarDefault'])) {
-            $sla->setDefault($GLOBALS['wgLibravatarDefault']);
+            $params['default'] = $GLOBALS['wgLibravatarDefault'];
+        }
+        $params['default'] = $parser->recursiveTagParse(
+            $params['default'], $frame
+        );
+        $sla->setDefault($params['default']);
+
+        // algorithm attribute
+        if (isset($params['algorithm'])) {
+            // ok
+        } else if (isset($GLOBALS['wgLibravatarAlgorithm'])) {
+            $params['algorithm'] = $GLOBALS['wgLibravatarAlgorithm'];
         }
         if (isset($params['algorithm'])) {
+            $params['algorithm'] = $parser->recursiveTagParse(
+                $params['algorithm'], $frame
+            );
             $sla->setAlgorithm($params['algorithm']);
-        } else if (isset($GLOBALS['wgLibravatarAlgorithm'])) {
-            $sla->setAlgorithm($GLOBALS['wgLibravatarAlgorithm']);
         }
     } catch (Exception $e) {
         return sprintf(
@@ -106,7 +130,14 @@ function mwLibravatarTagParse($content, $params, $parser)
     }
 
     if (isset($params['title'])) {
-        $extra .= sprintf(' title="%s"', htmlspecialchars($params['title']));
+        $extra .= sprintf(
+            ' title="%s"',
+            htmlspecialchars(
+                $parser->recursiveTagParse(
+                    $params['title'], $frame
+                )
+            )
+        );
     }
 
     return sprintf(
