@@ -14,6 +14,11 @@
 
     <copy todir="${tmpdir}">
       <fileset refid="sla"/>
+      <fileset dir=".">
+        <include name="ChangeLog"/>
+        <include name="LICENSE"/>
+        <include name="README.rst"/>
+      </fileset>
     </copy>
     <copy file="Libravatar.php" tofile="${tmpdir}/index.php"/>
 
