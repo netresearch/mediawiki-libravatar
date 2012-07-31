@@ -140,6 +140,17 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         );
     }
 
+    if (isset($params['style'])) {
+        $extra .= sprintf(
+            ' style="%s"',
+            htmlspecialchars(
+                $parser->recursiveTagParse(
+                    $params['style'], $frame
+                )
+            )
+        );
+    }
+
     return sprintf(
         '<img src="%s" alt="%s" width="%s"%s/>',
         htmlspecialchars($sla->getUrl($params['email'])),

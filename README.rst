@@ -50,6 +50,9 @@ Supported attributes
 ``title``
   Title attribute value for the image tag
 
+``style``
+  Style attribute value for the image tag
+
 
 Global configuration variables
 ==============================
