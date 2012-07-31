@@ -105,10 +105,12 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         } else if (isset($GLOBALS['wgLibravatarDefault'])) {
             $params['default'] = $GLOBALS['wgLibravatarDefault'];
         }
-        $params['default'] = $parser->recursiveTagParse(
-            $params['default'], $frame
-        );
-        $sla->setDefault($params['default']);
+        if (isset($params['default'])) {
+            $params['default'] = $parser->recursiveTagParse(
+                $params['default'], $frame
+            );
+            $sla->setDefault($params['default']);
+        }
 
         // algorithm attribute
         if (isset($params['algorithm'])) {
