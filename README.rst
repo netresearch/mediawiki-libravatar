@@ -7,8 +7,12 @@ which displays the avatar image for a given email address,
 using the Libravatar__ service.
 It is federated and falls back to Gravatar if no Libravatar is found.
 
+See the Homepage__ and `source code`__.
+
 __ http://www.mediawiki.org/
 __ https://www.libravatar.org/
+__ http://www.mediawiki.org/wiki/Extension:Libravatar
+__ https://github.com/netresearch/mediawiki-libravatar
 
 
 Examples
