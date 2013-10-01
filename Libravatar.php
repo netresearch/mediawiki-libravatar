@@ -81,6 +81,9 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
                 'email attribute missing'
             );
         }
+
+        // validate email address
+        if (!Sanitizer::validateEmail($params['email'])) throw new InvalidArgumentException('email address invalid.');
         $params['email'] = $parser->recursiveTagParse(
             $params['email'], $frame
         );
