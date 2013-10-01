@@ -126,7 +126,7 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         }
     } catch (Exception $e) {
         return sprintf(
-            '<span style="color:red">%s</span>',
+            '<span class="error">%s</span>',
             'Libravatar error: ' . htmlspecialchars($e->getMessage())
         );
     }
