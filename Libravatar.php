@@ -74,7 +74,7 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         // email attribute
         if (isset($params['email'])) {
             //all fine
-        } else if ($content != '') {
+        } else if (trim($content) != '') {
             $params['email'] = trim($content);
         } else {
             throw new InvalidArgumentException(
