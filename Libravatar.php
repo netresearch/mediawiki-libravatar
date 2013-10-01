@@ -25,7 +25,7 @@ $wgExtensionCredits['Libravatar'][]= array(
     'name'         => 'Libravatar extension',
     'version'      => '0.1.0',
     'author'       => 'Christian Weiske <christian.weiske@netresearch.de>',
-    'url'          => 'http://www.your.com/mynewtag/',
+    'url'          => 'http://www.mediawiki.org/wiki/Extension:Libravatar',
     'description'  => 'Embed gravatars from libravatar.org'
 );
 
