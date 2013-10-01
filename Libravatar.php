@@ -76,9 +76,14 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
             //all fine
         } else if (trim($content) != '') {
             $params['email'] = trim($content);
+        // take email from MediaWiki user
+        } else if (isset($params['user'])) {
+            $user = User::newFromName($params['user']);
+            if ($user === false) throw new InvalidArgumentException('user does not exist'); // maybe show a special image in that case?
+            $params['email'] = $user->getEmail();
         } else {
             throw new InvalidArgumentException(
-                'email attribute missing'
+                'email (or user) attribute missing'
             );
         }
 
