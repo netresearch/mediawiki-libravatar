@@ -21,8 +21,8 @@ if (!defined('MEDIAWIKI')) {
 
 $wgExtensionFunctions[] = 'mwLibravatarTagInit';
 
-$wgExtensionCredits['Libravatar'][]= array(
-    'name'         => 'Libravatar extension',
+$wgExtensionCredits['parserhook'][]= array(
+    'name'         => 'Libravatar',
     'version'      => '0.1.0',
     'author'       => 'Christian Weiske <christian.weiske@netresearch.de>',
     'url'          => 'http://www.mediawiki.org/wiki/Extension:Libravatar',
