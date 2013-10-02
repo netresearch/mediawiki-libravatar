@@ -23,7 +23,7 @@ if (!defined('MEDIAWIKI')) {
     die("This file is part of MediaWiki and is not a valid entry point\n");
 }
 
-$wgExtensionFunctions[] = 'mwLibravatarTagInit';
+$wgHooks['ParserFirstCallInit'][] = 'libravatarParserFirstCallInit';
 
 $wgExtensionCredits['parserhook'][]= array(
     'name'         => 'Libravatar',
@@ -37,15 +37,14 @@ if (!isset($GLOBALS['wgLibravatarSize'])) {
     $GLOBALS['wgLibravatarSize'] = 32;
 }
 
+
 /**
  * Register the <libravatar/> tag with the MediaWiki parser
- *
- * @return void
  */
-function mwLibravatarTagInit()
+function libravatarParserFirstCallInit($wgParser)
 {
-    global $wgParser;
     $wgParser->setHook('libravatar', 'mwLibravatarTagParse');
+    return true;
 }
 
 /**
