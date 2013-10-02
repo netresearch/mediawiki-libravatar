@@ -70,19 +70,9 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
     global $wgLibravatarDefault;
     global $wgLibravatarAlgorithm;
 
-    // include the Services_Libravatar library
-    include_once 'Services/Libravatar.php';
-    if (!class_exists('Services_Libravatar')) {
-        throw new MWException(
-            'Libravatar: Services_Libravatar not available'
-        );
-    }
-    $sla = new Services_Libravatar();
-    $sla->detectHttps();
-
-    $extra = '';
 
     // parse attributes
+    $extra = '';
     try {
         // user attribute (optional)
         $user = null;
@@ -107,18 +97,15 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         // size attribute
         $size = (int) $wgLibravatarSize; // default size
         if (isset($params['size'])) $size = (int) $parser->recursiveTagParse($params['size'], $frame);
-        $sla->setSize($size);
         $extra .= sprintf(' width="%d" height="%d"', $size, $size);
 
         // default attribute
         $default = $wgLibravatarDefault;
         if (isset($params['default'])) $default = $parser->recursiveTagParse($params['default'], $frame);
-        $sla->setDefault($default);
 
         // algorithm attribute
         $algorithm = $wgLibravatarAlgorithm;
         if (isset($params['algorithm'])) $algorithm = $parser->recursiveTagParse($params['algorithm'], $frame);
-        $sla->setAlgorithm($algorithm);
         
         // title attribute
         $title = null;
@@ -141,9 +128,26 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         );
     }
 
+    
+    // use Services_Libravatar library to get avatar URL
+    include_once 'Services/Libravatar.php';
+    if (!class_exists('Services_Libravatar')) {
+        throw new MWException(
+            'Libravatar: Services_Libravatar not available'
+        );
+    }
+    $sla = new Services_Libravatar();
+    $sla->detectHttps();
+    $sla->setSize($size);
+    $sla->setDefault($default);
+    $sla->setAlgorithm($algorithm);
+    $url = $sla->getUrl($email);
+
+
+    // return HTML
     return sprintf(
         '<img src="%s" alt="%s" %s/>',
-        htmlspecialchars($sla->getUrl($email)),
+        htmlspecialchars($url),
         htmlspecialchars(
             'Avatar of '
             . str_replace(
