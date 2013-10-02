@@ -23,8 +23,6 @@ if (!defined('MEDIAWIKI')) {
     die("This file is part of MediaWiki and is not a valid entry point\n");
 }
 
-$wgHooks['ParserFirstCallInit'][] = 'libravatarParserFirstCallInit';
-
 $wgExtensionCredits['parserhook'][]= array(
     'name'         => 'Libravatar',
     'version'      => '0.1.0',
@@ -39,6 +37,8 @@ $wgLibravatarSize = 32; // avatar image width and height
 $wgLibravatarDefault = null; // default image: '404', 'mm', 'identicon', 'monsterid', 'wavatar', 'retro' or null
 $wgLibravatarAlgorithm = null; // 'md5' or 'sha256' or null
 
+
+$wgHooks['ParserFirstCallInit'][] = 'libravatarParserFirstCallInit';
 
 
 /**
