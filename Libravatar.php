@@ -28,7 +28,7 @@ $wgHooks['ParserFirstCallInit'][] = 'libravatarParserFirstCallInit';
 $wgExtensionCredits['parserhook'][]= array(
     'name'         => 'Libravatar',
     'version'      => '0.1.0',
-    'author'       => array('Christian Weiske <christian.weiske@netresearch.de>', 'Philipp Spitzer <philipp.spitzer@winterrodeln.org>'),
+    'author'       => array('Christian Weiske', 'Philipp Spitzer'),
     'url'          => 'http://www.mediawiki.org/wiki/Extension:Libravatar',
     'description'  => 'Embed gravatars from libravatar.org'
 );
