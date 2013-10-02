@@ -35,7 +35,7 @@ $wgExtensionCredits['parserhook'][]= array(
 // Global variables (to be changed in LocalSettings.ini)
 $wgLibravatarSize = 32; // avatar image width and height
 $wgLibravatarDefault = null; // default image: '404', 'mm', 'identicon', 'monsterid', 'wavatar', 'retro' or null
-$wgLibravatarAlgorithm = null; // 'md5' or 'sha256' or null
+$wgLibravatarAlgorithm = 'md5'; // 'md5' or 'sha256'
 
 
 $wgHooks['ParserFirstCallInit'][] = 'libravatarParserFirstCallInit';
@@ -82,68 +82,58 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
 
     $extra = '';
 
+    // parse attributes
     try {
+        // user attribute (optional)
+        $user = null;
+        if (isset($params['user']))
+            $user = $parser->recursiveTagParse($params['user'], $frame);
+
         // email attribute
-        if (isset($params['email'])) {
-            //all fine
-        } else if (trim($content) != '') {
-            $params['email'] = trim($content);
-        // take email from MediaWiki user
-        } else if (isset($params['user'])) {
-            $user = User::newFromName($params['user']);
-            if ($user === false) throw new InvalidArgumentException('user does not exist'); // maybe show a special image in that case?
-            $params['email'] = $user->getEmail();
-        } else {
-            throw new InvalidArgumentException(
-                'email (or user) attribute missing'
-            );
-        }
+        $email = null;
+        if (isset($params['email']))   $email = $parser->recursiveTagParse($params['email'], $frame);
+        else if (trim($content) != '') $email = $parser->recursiveTagParse(trim($content), $frame);
+        else if (!is_null($user)) {
+            // take email from MediaWiki user
+            $mwuser = User::newFromName($user);
+            // if the MediaWiki user does not exist we throw an exception
+            if ($mwuser === false) throw new InvalidArgumentException('user does not exist'); 
+            $email = $mwuser->getEmail();
+        } else throw new InvalidArgumentException('email (or user) attribute missing');
 
         // validate email address
-        if (!Sanitizer::validateEmail($params['email'])) throw new InvalidArgumentException('email address invalid.');
-        $params['email'] = $parser->recursiveTagParse(
-            $params['email'], $frame
-        );
+        if (!Sanitizer::validateEmail($email)) throw new InvalidArgumentException('email address invalid.');
 
         // size attribute
-        if (isset($params['size'])) {
-            $params['size'] = (int) $params['size'];
-        } else if (!is_null($wgLibravatarSize)) {
-            $params['size'] = (int) $wgLibravatarSize;
-        }
-        $params['size'] = $parser->recursiveTagParse(
-            $params['size'], $frame
-        );
-        $sla->setSize($params['size']);
-        $extra .= sprintf(
-            ' width="%d" height="%d"', $params['size'], $params['size']
-        );
+        $size = (int) $wgLibravatarSize; // default size
+        if (isset($params['size'])) $size = (int) $parser->recursiveTagParse($params['size'], $frame);
+        $sla->setSize($size);
+        $extra .= sprintf(' width="%d" height="%d"', $size, $size);
 
         // default attribute
-        if (isset($params['default'])) {
-            // ok
-        } else if (!is_null($wgLibravatarDefault)) {
-            $params['default'] = $wgLibravatarDefault;
-        }
-        if (isset($params['default'])) {
-            $params['default'] = $parser->recursiveTagParse(
-                $params['default'], $frame
-            );
-            $sla->setDefault($params['default']);
-        }
+        $default = $wgLibravatarDefault;
+        if (isset($params['default'])) $default = $parser->recursiveTagParse($params['default'], $frame);
+        $sla->setDefault($default);
 
         // algorithm attribute
-        if (isset($params['algorithm'])) {
-            // ok
-        } else if (!is_null($wgLibravatarAlgorithm)) {
-            $params['algorithm'] = $wgLibravatarAlgorithm;
+        $algorithm = $wgLibravatarAlgorithm;
+        if (isset($params['algorithm'])) $algorithm = $parser->recursiveTagParse($params['algorithm'], $frame);
+        $sla->setAlgorithm($algorithm);
+        
+        // title attribute
+        $title = null;
+        if (isset($params['title'])) {
+            $title = $parser->recursiveTagParse($params['title'], $frame);
+            $extra .= sprintf(' title="%s"', htmlspecialchars($title));
         }
-        if (isset($params['algorithm'])) {
-            $params['algorithm'] = $parser->recursiveTagParse(
-                $params['algorithm'], $frame
-            );
-            $sla->setAlgorithm($params['algorithm']);
+
+        // style attribute
+        $style = null;
+        if (isset($params['style'])) {
+            $style = $parser->recursiveTagParse($params['style'], $frame);
+            $extra .= sprintf(' style="%s"', htmlspecialchars($style));
         }
+
     } catch (Exception $e) {
         return sprintf(
             '<span class="error">%s</span>',
@@ -151,37 +141,15 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         );
     }
 
-    if (isset($params['title'])) {
-        $extra .= sprintf(
-            ' title="%s"',
-            htmlspecialchars(
-                $parser->recursiveTagParse(
-                    $params['title'], $frame
-                )
-            )
-        );
-    }
-
-    if (isset($params['style'])) {
-        $extra .= sprintf(
-            ' style="%s"',
-            htmlspecialchars(
-                $parser->recursiveTagParse(
-                    $params['style'], $frame
-                )
-            )
-        );
-    }
-
     return sprintf(
         '<img src="%s" alt="%s" %s/>',
-        htmlspecialchars($sla->getUrl($params['email'])),
+        htmlspecialchars($sla->getUrl($email)),
         htmlspecialchars(
             'Avatar of '
             . str_replace(
                 array('@', '.'),
                 array(' at ', ' dot '),
-                $params['email']
+                $email
             )
         ),
         $extra
