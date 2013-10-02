@@ -1,6 +1,9 @@
 <?php
 /**
+ * This is a fork of the
  * Libravatar MediaWiki extension.
+ * The original extension was written by Christian Weiske,
+ * the fork was done by Philipp Spitzer
  *
  * PHP version 5.
  *
@@ -10,6 +13,7 @@
  * @category MediaWiki
  * @package  Libravatar
  * @author   Christian Weiske <christian.weiske@netresearch.de>
+ * @author   Philipp Spitzer <philipp.spitzer@winterrodeln.org>
  * @license  AGPL http://www.gnu.org/licenses/agpl.txt
  * @link     http://www.mediawiki.org/wiki/Extension:Libravatar
  * @link     http://pear.php.net/package/Services_Libravatar/
@@ -24,7 +28,7 @@ $wgExtensionFunctions[] = 'mwLibravatarTagInit';
 $wgExtensionCredits['parserhook'][]= array(
     'name'         => 'Libravatar',
     'version'      => '0.1.0',
-    'author'       => 'Christian Weiske <christian.weiske@netresearch.de>',
+    'author'       => array('Christian Weiske <christian.weiske@netresearch.de>', 'Philipp Spitzer <philipp.spitzer@winterrodeln.org>'),
     'url'          => 'http://www.mediawiki.org/wiki/Extension:Libravatar',
     'description'  => 'Embed gravatars from libravatar.org'
 );
