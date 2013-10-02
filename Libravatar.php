@@ -33,9 +33,12 @@ $wgExtensionCredits['parserhook'][]= array(
     'description'  => 'Embed gravatars from libravatar.org'
 );
 
-if (!isset($GLOBALS['wgLibravatarSize'])) {
-    $GLOBALS['wgLibravatarSize'] = 32;
-}
+
+// Global variables (to be changed in LocalSettings.ini)
+$wgLibravatarSize = 32; // avatar image width and height
+$wgLibravatarDefault = null; // default image: '404', 'mm', 'identicon', 'monsterid', 'wavatar', 'retro' or null
+$wgLibravatarAlgorithm = null; // 'md5' or 'sha256' or null
+
 
 
 /**
@@ -62,6 +65,12 @@ function libravatarParserFirstCallInit($wgParser)
  */
 function mwLibravatarTagParse($content, $params, $parser, $frame)
 {
+    // setup variables
+    global $wgLibravatarSize;
+    global $wgLibravatarDefault;
+    global $wgLibravatarAlgorithm;
+
+    // include the Services_Libravatar library
     include_once 'Services/Libravatar.php';
     if (!class_exists('Services_Libravatar')) {
         throw new MWException(
@@ -99,8 +108,8 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         // size attribute
         if (isset($params['size'])) {
             $params['size'] = (int) $params['size'];
-        } else if (isset($GLOBALS['wgLibravatarSize'])) {
-            $params['size'] = (int) $GLOBALS['wgLibravatarSize'];
+        } else if (!is_null($wgLibravatarSize)) {
+            $params['size'] = (int) $wgLibravatarSize;
         }
         $params['size'] = $parser->recursiveTagParse(
             $params['size'], $frame
@@ -113,8 +122,8 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         // default attribute
         if (isset($params['default'])) {
             // ok
-        } else if (isset($GLOBALS['wgLibravatarDefault'])) {
-            $params['default'] = $GLOBALS['wgLibravatarDefault'];
+        } else if (!is_null($wgLibravatarDefault)) {
+            $params['default'] = $wgLibravatarDefault;
         }
         if (isset($params['default'])) {
             $params['default'] = $parser->recursiveTagParse(
@@ -126,8 +135,8 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         // algorithm attribute
         if (isset($params['algorithm'])) {
             // ok
-        } else if (isset($GLOBALS['wgLibravatarAlgorithm'])) {
-            $params['algorithm'] = $GLOBALS['wgLibravatarAlgorithm'];
+        } else if (!is_null($wgLibravatarAlgorithm)) {
+            $params['algorithm'] = $wgLibravatarAlgorithm;
         }
         if (isset($params['algorithm'])) {
             $params['algorithm'] = $parser->recursiveTagParse(
