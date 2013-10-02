@@ -166,7 +166,7 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
     }
 
     return sprintf(
-        '<img src="%s" alt="%s" width="%s"%s/>',
+        '<img src="%s" alt="%s" %s/>',
         htmlspecialchars($sla->getUrl($params['email'])),
         htmlspecialchars(
             'Avatar of '
@@ -176,7 +176,6 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
                 $params['email']
             )
         ),
-        htmlspecialchars($params['size']),
         $extra
     );
 }
