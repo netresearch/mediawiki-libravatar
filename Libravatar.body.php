@@ -35,8 +35,9 @@ class LibravatarExtension {
             elseif (!is_null($user)) {
                 // take email from MediaWiki user
                 $mwuser = User::newFromName($user);
-                // if the MediaWiki user does not exist we throw an exception
-                if ($mwuser === false) throw new InvalidArgumentException('user does not exist'); 
+                // if the MediaWiki user is invalid or does not exist we throw an exception
+                if ($mwuser === false) throw new InvalidArgumentException('username has invalid characters');
+                if ($mwuser->getId() == 0) throw new InvalidArgumentException('user does not exist');
                 $email = $mwuser->getEmail();
             } else throw new InvalidArgumentException('email (or user) attribute missing');
 
