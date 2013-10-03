@@ -149,10 +149,11 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
     $img->setAttribute('height', sprintf('%d', $size));
     if (!is_null($title)) $img->setAttribute('title', $title);
     if (!is_null($style)) $img->setAttribute('style', $style);
+    $html = $doc->saveHTML($img);
 
 
-    return $doc->saveHTML($img);
-
+    // return result (markerType => nowiki prevents wiki formatting of the result)
+    return array($html, 'markerType' => 'nowiki');
 }
 
 ?>
