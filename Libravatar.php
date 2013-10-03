@@ -26,7 +26,7 @@ if (!defined('MEDIAWIKI')) {
 
 $wgExtensionCredits['parserhook'][]= array(
     'name'         => 'Libravatar',
-    'version'      => '0.1.0',
+    'version'      => '0.2.0',
     'author'       => array('Christian Weiske', 'Philipp Spitzer'),
     'url'          => 'http://www.mediawiki.org/wiki/Extension:Libravatar',
     'description'  => 'Embed gravatars from libravatar.org'
