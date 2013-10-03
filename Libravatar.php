@@ -111,6 +111,12 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
             $title = $parser->recursiveTagParse($params['title'], $frame);
         }
 
+        // class attribute
+        $class = null;
+        if (isset($params['class'])) {
+            $class = $parser->recursiveTagParse($params['class'], $frame);
+        }
+
         // style attribute
         $style = null;
         if (isset($params['style'])) {
@@ -148,6 +154,7 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
     $img->setAttribute('width', sprintf('%d', $size));
     $img->setAttribute('height', sprintf('%d', $size));
     if (!is_null($title)) $img->setAttribute('title', $title);
+    if (!is_null($class)) $img->setAttribute('class', $class);
     if (!is_null($style)) $img->setAttribute('style', $style);
     $html = $doc->saveHTML($img);
 
