@@ -80,9 +80,9 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
 
         // email attribute
         $email = null;
-        if (isset($params['email']))   $email = $parser->recursiveTagParse($params['email'], $frame);
-        else if (trim($content) != '') $email = $parser->recursiveTagParse(trim($content), $frame);
-        else if (!is_null($user)) {
+        if (isset($params['email']))  $email = $parser->recursiveTagParse($params['email'], $frame);
+        elseif (trim($content) != '') $email = $parser->recursiveTagParse(trim($content), $frame);
+        elseif (!is_null($user)) {
             // take email from MediaWiki user
             $mwuser = User::newFromName($user);
             // if the MediaWiki user does not exist we throw an exception
