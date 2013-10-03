@@ -105,6 +105,16 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         $algorithm = $wgLibravatarAlgorithm;
         if (isset($params['algorithm'])) $algorithm = $parser->recursiveTagParse($params['algorithm'], $frame);
         
+        // alt attribute
+        $alt = null;
+        if (isset($params['alt'])) {
+            $alt = $parser->recursiveTagParse($params['alt'], $frame);
+        } elseif (is_null($user)) {
+            $alt = 'Avatar of ' . str_replace(array('@', '.'), array(' at ', ' dot '), $email);
+        } else {
+            $alt = 'Avatar of ' . $user;
+        }
+
         // title attribute
         $title = null;
         if (isset($params['title'])) {
@@ -150,7 +160,7 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
     $doc = new DOMDocument();
     $img = $doc->appendChild($doc->createElement("img"));
     $img->setAttribute('src', $url);
-    $img->setAttribute('alt', 'Avatar of ' . str_replace(array('@', '.'), array(' at ', ' dot '), $email));
+    $img->setAttribute('alt', $alt);
     $img->setAttribute('width', sprintf('%d', $size));
     $img->setAttribute('height', sprintf('%d', $size));
     if (!is_null($title)) $img->setAttribute('title', $title);
