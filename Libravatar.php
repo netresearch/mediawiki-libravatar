@@ -72,7 +72,6 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
 
 
     // parse attributes
-    $extra = '';
     try {
         // user attribute (optional)
         $user = null;
@@ -97,7 +96,6 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         // size attribute
         $size = (int) $wgLibravatarSize; // default size
         if (isset($params['size'])) $size = (int) $parser->recursiveTagParse($params['size'], $frame);
-        $extra .= sprintf(' width="%d" height="%d"', $size, $size);
 
         // default attribute
         $default = $wgLibravatarDefault;
@@ -111,14 +109,12 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         $title = null;
         if (isset($params['title'])) {
             $title = $parser->recursiveTagParse($params['title'], $frame);
-            $extra .= sprintf(' title="%s"', htmlspecialchars($title));
         }
 
         // style attribute
         $style = null;
         if (isset($params['style'])) {
             $style = $parser->recursiveTagParse($params['style'], $frame);
-            $extra .= sprintf(' style="%s"', htmlspecialchars($style));
         }
 
     } catch (Exception $e) {
@@ -144,20 +140,19 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
     $url = $sla->getUrl($email);
 
 
-    // return HTML
-    return sprintf(
-        '<img src="%s" alt="%s" %s/>',
-        htmlspecialchars($url),
-        htmlspecialchars(
-            'Avatar of '
-            . str_replace(
-                array('@', '.'),
-                array(' at ', ' dot '),
-                $email
-            )
-        ),
-        $extra
-    );
+    // convert to HTML <img ... /> tag
+    $doc = new DOMDocument();
+    $img = $doc->appendChild($doc->createElement("img"));
+    $img->setAttribute('src', $url);
+    $img->setAttribute('alt', 'Avatar of ' . str_replace(array('@', '.'), array(' at ', ' dot '), $email));
+    $img->setAttribute('width', sprintf('%d', $size));
+    $img->setAttribute('height', sprintf('%d', $size));
+    if (!is_null($title)) $img->setAttribute('title', $title);
+    if (!is_null($style)) $img->setAttribute('style', $style);
+
+
+    return $doc->saveHTML($img);
+
 }
 
 ?>
