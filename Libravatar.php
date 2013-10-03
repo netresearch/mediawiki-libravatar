@@ -42,7 +42,7 @@ $wgLibravatarAlgorithm = 'md5'; // 'md5' or 'sha256'
 // Auto load class and register hook
 $wgAutoloadClasses['LibravatarExtension'] = dirname(__FILE__) . '/Libravatar.body.php';
 $wgHooks['ParserFirstCallInit'][] = 'libravatarParserFirstCallInit';
-
+$wgExtensionMessagesFiles['Libravatar'] = dirname( __FILE__ ) . '/Libravatar.i18n.php';
 
 // Register the <libravatar/> tag with the MediaWiki parser
 function libravatarParserFirstCallInit($wgParser) {

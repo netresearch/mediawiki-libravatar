@@ -36,13 +36,13 @@ class LibravatarExtension {
                 // take email from MediaWiki user
                 $mwuser = User::newFromName($user);
                 // if the MediaWiki user is invalid or does not exist we throw an exception
-                if ($mwuser === false) throw new InvalidArgumentException('username has invalid characters');
-                if ($mwuser->getId() == 0) throw new InvalidArgumentException('user does not exist');
+                if ($mwuser === false) throw new InvalidArgumentException(wfMessage('libravatar-invalidusername'));
+                if ($mwuser->getId() == 0) throw new InvalidArgumentException(wfMessage('libravatar-userunknown'));
                 $email = $mwuser->getEmail();
-            } else throw new InvalidArgumentException('email (or user) attribute missing');
+            } else throw new InvalidArgumentException(wfMessage('libravatar-noemail'));
 
             // validate email address
-            if (!Sanitizer::validateEmail($email)) throw new InvalidArgumentException('email address invalid.');
+            if (!Sanitizer::validateEmail($email)) throw new InvalidArgumentException(wfMessage('libravatar-invalidemail'));
 
             // size attribute (optional)
             $size = (int) $wgLibravatarSize; // default size
@@ -61,9 +61,9 @@ class LibravatarExtension {
             if (isset($params['alt'])) {
                 $alt = $parser->recursiveTagParse($params['alt'], $frame);
             } elseif (is_null($user)) {
-                $alt = 'Avatar of ' . str_replace(array('@', '.'), array(' at ', ' dot '), $email);
+                $alt = wfMessage('libravatar-avatarof', str_replace(array('@', '.'), array(' at ', ' dot '), $email));
             } else {
-                $alt = 'Avatar of ' . $user;
+                $alt = wfMessage('libravatar-avatarof', $user);
             }
 
             // title attribute (optional)
@@ -87,7 +87,7 @@ class LibravatarExtension {
         } catch (Exception $e) {
             return sprintf(
                 '<span class="error">%s</span>',
-                'Libravatar error: ' . htmlspecialchars($e->getMessage())
+                wfMessage('libravatar-error', htmlspecialchars($e->getMessage()))
             );
         }
 
