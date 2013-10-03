@@ -78,7 +78,7 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         if (isset($params['user']))
             $user = $parser->recursiveTagParse($params['user'], $frame);
 
-        // email attribute
+        // email attribute (mandatory if no user attribute is given)
         $email = null;
         if (isset($params['email']))  $email = $parser->recursiveTagParse($params['email'], $frame);
         elseif (trim($content) != '') $email = $parser->recursiveTagParse(trim($content), $frame);
@@ -93,19 +93,19 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
         // validate email address
         if (!Sanitizer::validateEmail($email)) throw new InvalidArgumentException('email address invalid.');
 
-        // size attribute
+        // size attribute (optional)
         $size = (int) $wgLibravatarSize; // default size
         if (isset($params['size'])) $size = (int) $parser->recursiveTagParse($params['size'], $frame);
 
-        // default attribute
+        // default attribute (optional)
         $default = $wgLibravatarDefault;
         if (isset($params['default'])) $default = $parser->recursiveTagParse($params['default'], $frame);
 
-        // algorithm attribute
+        // algorithm attribute (optional)
         $algorithm = $wgLibravatarAlgorithm;
         if (isset($params['algorithm'])) $algorithm = $parser->recursiveTagParse($params['algorithm'], $frame);
         
-        // alt attribute
+        // alt attribute (optional)
         $alt = null;
         if (isset($params['alt'])) {
             $alt = $parser->recursiveTagParse($params['alt'], $frame);
@@ -115,19 +115,19 @@ function mwLibravatarTagParse($content, $params, $parser, $frame)
             $alt = 'Avatar of ' . $user;
         }
 
-        // title attribute
+        // title attribute (optional)
         $title = null;
         if (isset($params['title'])) {
             $title = $parser->recursiveTagParse($params['title'], $frame);
         }
 
-        // class attribute
+        // class attribute (optional)
         $class = null;
         if (isset($params['class'])) {
             $class = $parser->recursiveTagParse($params['class'], $frame);
         }
 
-        // style attribute
+        // style attribute (optional)
         $style = null;
         if (isset($params['style'])) {
             $style = $parser->recursiveTagParse($params['style'], $frame);
