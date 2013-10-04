@@ -1,9 +1,6 @@
 <?php
 /**
- * This is a fork of the
  * Libravatar MediaWiki extension.
- * The original extension was written by Christian Weiske,
- * the fork was done by Philipp Spitzer
  *
  * PHP version 5.
  *
