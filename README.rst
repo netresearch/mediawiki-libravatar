@@ -12,7 +12,7 @@ See the Homepage__ and `source code`__.
 __ http://www.mediawiki.org/
 __ https://www.libravatar.org/
 __ http://www.mediawiki.org/wiki/Extension:Libravatar
-__ https://github.com/netresearch/mediawiki-libravatar
+__ https://github.com/phispi/mediawiki-libravatar
 
 
 Examples
@@ -29,17 +29,22 @@ Image title::
 
   <libravatar email="foo@example.org" title="Foo's avatar"/>
 
-Verbose notation::
+Verbose notation and default avatar::
 
   <libravatar default="monsterid">foo@example.org</libravtar>
 
+MediaWiki user's email address::
 
+  <libravatar user="foo"/>
 
 
 Supported attributes
 ====================
 ``email``
-  Email address to show avatar of. Required.
+  Email address to show avatar of. Required (if no user is given)
+
+``user``
+  MediaWiki user name of an existing MediaWiki user having an attached email address.
 
 ``size``
   Size in pixels (avatars are quadratic)
@@ -51,11 +56,17 @@ Supported attributes
 ``algorithm``
   Email hashing algorithm. md5 or sha256
 
+``alt``
+  "alt" attribute value for the image tag
+
 ``title``
-  Title attribute value for the image tag
+  "title" attribute value for the image tag
 
 ``style``
-  Style attribute value for the image tag
+  "style" attribute value for the image tag
+
+``class``
+  "class" attribute value for the image tag
 
 
 Global configuration variables
@@ -70,11 +81,11 @@ Installation
 ============
 Phar
 ----
-Copy the ``mediawiki-libravatar-0.1.0.phar`` file into your MediaWiki
+Copy the ``mediawiki-libravatar-0.2.0.phar`` file into your MediaWiki
 ``extensions/`` directory and add the following to your
 ``LocalSettings.php``::
 
-  require_once "$IP/extensions/mediawiki-libravatar-0.1.0.phar";
+  require_once "$IP/extensions/mediawiki-libravatar-0.2.0.phar";
 
 That's it, it works now. All dependencies are included in the ``.phar`` file.
 
@@ -87,8 +98,9 @@ Normal installation
 -------------------
 
 1. Run $ pear install Services_Libravatar-alpha
-2. Copy this extension's ``Libravatar.php`` to
-   ``$mediawiki/extensions/Libravatar/Libravatar.php``
+2. Copy this extension's ``Libravatar.php``, ``Libravatar.body.php``
+   and ``Libravatar.i18n.php`` into the directory
+   ``$mediawiki/extensions/Libravatar/``
 3. Edit ``LocalSettings.php``::
 
     require_once "$IP/extensions/Libravatar/Libravatar.php";
@@ -105,3 +117,4 @@ Author
 ======
 
 Christian Weiske, christian.weiske@netresearch.de
+Philipp Spitzer, philipp.spitzer@winterrodeln.org
