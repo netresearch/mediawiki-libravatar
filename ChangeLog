@@ -8,7 +8,7 @@
 	* Internationalization: Currently English and German are supported.
 	* Minor changes to apply to MediaWiki coding standards:
 	Now we have three .php files instead of one.
-	* Fixed bug: The attribute "width" was gernerated twice.
+	* Fixed bug: The attribute "width" was generated twice.
 
 2012-07-31  Christian Weiske  <christian.weiske@netresearch.de>
 
