@@ -9,6 +9,7 @@ $messages = array();
 // * WikiText: WikiText syntax is allowed and interpreted by MediaWiki.
 
 $messages['qqq'] = array(
+    'libravatar-description' => 'Description of the extension. WikiText.',
     'libravatar-error' => 'Text to wrap a Libravatar error message. Text.',
     'libravatar-invalidusername' => 'Error message that appears when a username with invalid characters is given. Text.',
     'libravatar-userunknown' => 'Error message that appears when a user name of a non-existing mediawiki user is given. Text.',
@@ -19,6 +20,7 @@ $messages['qqq'] = array(
 
 
 $messages['en'] = array(
+    'libravatar-description' => 'Embed gravatars from libravatar.org',
     'libravatar-error' => 'Libravatar error: $1',
     'libravatar-invalidusername' => 'username has invalid characters',
     'libravatar-userunknown' => 'user does not exist',
@@ -29,6 +31,7 @@ $messages['en'] = array(
 
 
 $messages['de'] = array(
+    'libravatar-description' => 'Gravatare von libravatar.org einbinden.',
     'libravatar-error' => 'Libravatar Fehler: $1',
     'libravatar-invalidusername' => 'Der Benutzername enthält ungültige Zeichen.',
     'libravatar-userunknown' => 'Der Benutzer existiert nicht.',
