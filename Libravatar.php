@@ -38,6 +38,7 @@ $wgLibravatarAlgorithm = 'md5'; // 'md5' or 'sha256'
 
 // Auto load class and register hook
 $wgAutoloadClasses['LibravatarExtension'] = dirname(__FILE__) . '/Libravatar.body.php';
+$wgAutoloadClasses['Services_Libravatar'] = dirname(__FILE__) . '/Services/Libravatar.php';
 $wgHooks['ParserFirstCallInit'][] = 'libravatarParserFirstCallInit';
 $wgExtensionMessagesFiles['Libravatar'] = dirname( __FILE__ ) . '/Libravatar.i18n.php';
 

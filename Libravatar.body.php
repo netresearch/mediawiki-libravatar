@@ -11,8 +11,6 @@ class LibravatarExtension {
      * @param PPFrame_DOM $frame   Context data with e.g. template variables
      *
      * @return string HTML representation of the libravatar tag.
-     *
-     * @throws MWException In case Services_Libravatar is not available
      */
     function render($content, $params, $parser, $frame) {
         // setup variables
@@ -93,12 +91,6 @@ class LibravatarExtension {
 
         
         // use Services_Libravatar library to get avatar URL
-        include_once 'Services/Libravatar.php';
-        if (!class_exists('Services_Libravatar')) {
-            throw new MWException(
-                'Libravatar: Services_Libravatar not available'
-            );
-        }
         $sla = new Services_Libravatar();
         $sla->detectHttps();
         $sla->setSize($size);
