@@ -101,7 +101,7 @@ class LibravatarExtension {
 
         // convert to HTML <img ... /> tag
         $doc = new DOMDocument();
-        $img = $doc->appendChild($doc->createElement("img"));
+        $img = $doc->appendChild($doc->createElement('img'));
         $img->setAttribute('src', $url);
         $img->setAttribute('alt', $alt);
         $img->setAttribute('width', sprintf('%d', $size));
