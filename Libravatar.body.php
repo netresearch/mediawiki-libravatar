@@ -36,7 +36,7 @@ class LibravatarExtension {
                 // take email from MediaWiki user
                 $mwuser = User::newFromName($user);
                 // if the MediaWiki user is invalid or does not exist we throw an exception
-                if ($mwuser === false) throw new InvalidArgumentException(wfMessage('libravatar-invalidusername')->text());
+                if ($mwuser === false) throw new InvalidArgumentException(wfMessage('libravatar-invalidusername', $user)->text());
                 if ($mwuser->getId() == 0) throw new InvalidArgumentException(wfMessage('libravatar-userunknown')->text());
                 $email = $mwuser->getEmail();
             } else throw new InvalidArgumentException(wfMessage('libravatar-noemail')->text());
