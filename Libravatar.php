@@ -10,6 +10,7 @@
  * @category MediaWiki
  * @package  Libravatar
  * @author   Christian Weiske <christian.weiske@netresearch.de>
+ * @author   Philipp Spitzer <philipp.spitzer@winterrodeln.org>
  * @license  AGPL http://www.gnu.org/licenses/agpl.txt
  * @link     http://www.mediawiki.org/wiki/Extension:Libravatar
  * @link     http://pear.php.net/package/Services_Libravatar/
@@ -19,154 +20,32 @@ if (!defined('MEDIAWIKI')) {
     die("This file is part of MediaWiki and is not a valid entry point\n");
 }
 
-$wgExtensionFunctions[] = 'mwLibravatarTagInit';
 
-$wgExtensionCredits['Libravatar'][]= array(
-    'name'         => 'Libravatar extension',
-    'version'      => '0.1.0',
-    'author'       => 'Christian Weiske <christian.weiske@netresearch.de>',
-    'url'          => 'http://www.your.com/mynewtag/',
-    'description'  => 'Embed gravatars from libravatar.org'
+$wgExtensionCredits['parserhook'][]= array(
+    'name'           => 'Libravatar',
+    'version'        => '0.2.0',
+    'author'         => array('Christian Weiske', 'Philipp Spitzer'),
+    'url'            => 'http://www.mediawiki.org/wiki/Extension:Libravatar',
+    'descriptionmsg' => 'libravatar-description'
 );
 
-if (!isset($GLOBALS['wgLibravatarSize'])) {
-    $GLOBALS['wgLibravatarSize'] = 32;
-}
 
-/**
- * Register the <libravatar/> tag with the MediaWiki parser
- *
- * @return void
- */
-function mwLibravatarTagInit()
-{
-    global $wgParser;
-    $wgParser->setHook('libravatar', 'mwLibravatarTagParse');
-}
+// Global variables (to be changed in LocalSettings.ini)
+$wgLibravatarSize = 32; // avatar image width and height
+$wgLibravatarDefault = null; // default image: '404', 'mm', 'identicon', 'monsterid', 'wavatar', 'retro' or null
+$wgLibravatarAlgorithm = 'md5'; // 'md5' or 'sha256'
 
-/**
- * Generates the output for a <libravatar/> tag during parsing.
- *
- * @param string      $content Content of the tag
- *                             (between opening and closing tag)
- * @param array       $params  Array of tag parameters.
- * @param Parser      $parser  MediaWiki parser object
- * @param PPFrame_DOM $frame   Context data with e.g. template variables
- *
- * @return string HTML representation of the libravatar tag.
- *
- * @throws MWException In case Services_Libravatar is not available
- */
-function mwLibravatarTagParse($content, $params, $parser, $frame)
-{
-    include_once 'Services/Libravatar.php';
-    if (!class_exists('Services_Libravatar')) {
-        throw new MWException(
-            'Libravatar: Services_Libravatar not available'
-        );
-    }
-    $sla = new Services_Libravatar();
-    $sla->detectHttps();
 
-    $extra = '';
+// Auto load class and register hook
+$wgAutoloadClasses['LibravatarExtension'] = dirname(__FILE__) . '/Libravatar.body.php';
+$wgAutoloadClasses['Services_Libravatar'] = dirname(__FILE__) . '/Services/Libravatar.php';
+$wgHooks['ParserFirstCallInit'][] = 'libravatarParserFirstCallInit';
+$wgExtensionMessagesFiles['Libravatar'] = dirname( __FILE__ ) . '/Libravatar.i18n.php';
 
-    try {
-        // email attribute
-        if (isset($params['email'])) {
-            //all fine
-        } else if ($content != '') {
-            $params['email'] = trim($content);
-        } else {
-            throw new InvalidArgumentException(
-                'email attribute missing'
-            );
-        }
-        $params['email'] = $parser->recursiveTagParse(
-            $params['email'], $frame
-        );
-
-        // size attribute
-        if (isset($params['size'])) {
-            $params['size'] = (int) $params['size'];
-        } else if (isset($GLOBALS['wgLibravatarSize'])) {
-            $params['size'] = (int) $GLOBALS['wgLibravatarSize'];
-        }
-        $params['size'] = $parser->recursiveTagParse(
-            $params['size'], $frame
-        );
-        $sla->setSize($params['size']);
-        $extra .= sprintf(
-            ' width="%d" height="%d"', $params['size'], $params['size']
-        );
-
-        // default attribute
-        if (isset($params['default'])) {
-            // ok
-        } else if (isset($GLOBALS['wgLibravatarDefault'])) {
-            $params['default'] = $GLOBALS['wgLibravatarDefault'];
-        }
-        if (isset($params['default'])) {
-            $params['default'] = $parser->recursiveTagParse(
-                $params['default'], $frame
-            );
-            $sla->setDefault($params['default']);
-        }
-
-        // algorithm attribute
-        if (isset($params['algorithm'])) {
-            // ok
-        } else if (isset($GLOBALS['wgLibravatarAlgorithm'])) {
-            $params['algorithm'] = $GLOBALS['wgLibravatarAlgorithm'];
-        }
-        if (isset($params['algorithm'])) {
-            $params['algorithm'] = $parser->recursiveTagParse(
-                $params['algorithm'], $frame
-            );
-            $sla->setAlgorithm($params['algorithm']);
-        }
-    } catch (Exception $e) {
-        return sprintf(
-            '<span style="color:red">%s</span>',
-            'Libravatar error: ' . htmlspecialchars($e->getMessage())
-        );
-    }
-
-    if (isset($params['title'])) {
-        $extra .= sprintf(
-            ' title="%s"',
-            htmlspecialchars(
-                $parser->recursiveTagParse(
-                    $params['title'], $frame
-                )
-            )
-        );
-    }
-
-    if (isset($params['style'])) {
-        $extra .= sprintf(
-            ' style="%s"',
-            htmlspecialchars(
-                $parser->recursiveTagParse(
-                    $params['style'], $frame
-                )
-            )
-        );
-    }
-
-    return sprintf(
-        '<img src="%s" alt="%s" width="%s"%s/>',
-        htmlspecialchars($sla->getUrl($params['email'])),
-        htmlspecialchars(
-            'Avatar of '
-            . str_replace(
-                array('@', '.'),
-                array(' at ', ' dot '),
-                $params['email']
-            )
-        ),
-        htmlspecialchars($params['size']),
-        $extra
-    );
+// Register the <libravatar/> tag with the MediaWiki parser
+function libravatarParserFirstCallInit($wgParser) {
+    $wgParser->setHook('libravatar', 'LibravatarExtension::render');
+    return true;
 }
 
 ?>
